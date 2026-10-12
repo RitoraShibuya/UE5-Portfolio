@@ -9,6 +9,9 @@
 class UInputMappingContext;
 class UUserWidget;
 
+class UMainUI;
+class UShooterBulletCounterUI;
+
 /**
  *  Simple first person Player Controller
  *  Manages the input mapping context.
@@ -45,6 +48,14 @@ protected:
 	/** If true, the player will use UMG touch controls even if not playing on mobile platforms */
 	UPROPERTY(EditAnywhere, Config, Category = "Input|Touch Controls")
 	bool bForceTouchControls = false;
+
+	/*メインUIクラス*/
+	UPROPERTY(EditAnywhere,Category = "Portfolio|UI")
+	TSubclassOf<UUserWidget> MainUIWidgetClass;
+
+	/*メインUIのポインタ*/
+	UPROPERTY()
+	TObjectPtr<UMainUI> MainUI;
 
 	/** Gameplay initialization */
 	virtual void BeginPlay() override;

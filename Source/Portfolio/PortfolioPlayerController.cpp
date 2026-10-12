@@ -9,6 +9,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Portfolio.h"
 #include "Widgets/Input/SVirtualJoystick.h"
+#include "MainUI.h"
 
 APortfolioPlayerController::APortfolioPlayerController()
 {
@@ -20,24 +21,35 @@ void APortfolioPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	
-	// only spawn touch controls on local player controllers
-	if (ShouldUseTouchControls() && IsLocalPlayerController())
-	{
-		// spawn the mobile controls widget
-		MobileControlsWidget = CreateWidget<UUserWidget>(this, MobileControlsWidgetClass);
+	if (IsLocalPlayerController()) {
 
-		if (MobileControlsWidget)
+		//MainUI生成
+		MainUI = CreateWidget<UMainUI>(this, MainUIWidgetClass);
+
+		if (MainUI)
 		{
-			// add the controls to the player screen
-			MobileControlsWidget->AddToPlayerScreen(0);
-
-		} else {
-
-			UE_LOG(LogPortfolio, Error, TEXT("Could not spawn mobile controls widget."));
-
+			MainUI->AddToPlayerScreen(0);
 		}
 
+		// only spawn touch controls on local player controllers
+		if (ShouldUseTouchControls())
+		{
+			// spawn the mobile controls widget
+			MobileControlsWidget = CreateWidget<UUserWidget>(this, MobileControlsWidgetClass);
+
+			if (MobileControlsWidget)
+			{
+				// add the controls to the player screen
+				MobileControlsWidget->AddToPlayerScreen(0);
+
+			}
+			else {
+
+				UE_LOG(LogPortfolio, Error, TEXT("Could not spawn mobile controls widget."));
+
+			}
+
+		}
 	}
 }
 
