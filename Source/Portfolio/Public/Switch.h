@@ -1,0 +1,51 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameFramework/Actor.h"
+#include "InteractInterface.h"
+#include "Switch.generated.h"
+
+class UStaticMeshComponent;
+class UBoxComponent;
+class UPrimitiveComponent;
+class AActor;
+struct FHitResult;
+
+UCLASS()
+class PORTFOLIO_API ASwitch : public AActor,public IInteractInterface
+{
+	GENERATED_BODY()
+	
+private:
+	UPROPERTY(VisibleAnywhere, Category = "Portfolio")
+	TObjectPtr<USceneComponent> Root;
+
+	UPROPERTY(EditAnywhere,Category = "Portfolio")
+	TObjectPtr<UStaticMeshComponent> Mesh;
+
+	UPROPERTY(EditAnywhere, Category = "Portfolio")
+	TObjectPtr<UBoxComponent> OverlapBox;
+
+protected:
+	UPROPERTY(EditAnywhere,Category = "Portfolio")
+	AActor* Gimmick;
+
+public:	
+	// Sets default values for this actor's properties
+	ASwitch();
+
+	virtual void OnInteract(AActor* InteractActor);
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+	UFUNCTION()
+	void OnBoxBeginOverlap(UPrimitiveComponent* OverlapComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+};
