@@ -11,28 +11,57 @@ class UStaticMeshComponent;
 class UBoxComponent;
 class UPrimitiveComponent;
 class AActor;
+class UMaterialInterface;
+class UDynamicMaterialInstance;
 struct FHitResult;
+struct FLinearColor;
+
+UENUM()
+enum class SwitchState : uint8
+{
+	Off,
+	On
+};
 
 UCLASS()
-class PORTFOLIO_API ASwitch : public AActor,public IInteractInterface
+class PORTFOLIO_API ASwitch : public AActor, public IInteractInterface
 {
 	GENERATED_BODY()
-	
+
 private:
-	UPROPERTY(VisibleAnywhere, Category = "Portfolio")
+	UPROPERTY()
 	TObjectPtr<USceneComponent> Root;
 
-	UPROPERTY(EditAnywhere,Category = "Portfolio")
+	UPROPERTY()
+	TObjectPtr<UBoxComponent> OverlapBox;
+
+	UPROPERTY()
+	SwitchState State = SwitchState::Off;
+
+	UPROPERTY()
+	TObjectPtr<UMaterialInstanceDynamic> DynamicInstance;
+
+protected:
+	UPROPERTY(EditAnywhere, Category = "Portfolio")
+	UMaterialInterface* OverlayMaterial;
+
+	UPROPERTY(EditAnywhere, Category = "Portfolio")
 	TObjectPtr<UStaticMeshComponent> Mesh;
 
 	UPROPERTY(EditAnywhere, Category = "Portfolio")
-	TObjectPtr<UBoxComponent> OverlapBox;
+	TObjectPtr<AActor> Gimmick;
 
-protected:
-	UPROPERTY(EditAnywhere,Category = "Portfolio")
-	AActor* Gimmick;
 
-public:	
+	UPROPERTY(EditAnywhere, Category = "Portfolio")
+	FLinearColor OffColor;
+
+	UPROPERTY(EditAnywhere, Category = "Portfolio")
+	FLinearColor OnColor;
+
+	UPROPERTY(EditAnywhere, Category = "Portfolio")
+	FName ParamName;
+
+public:
 	// Sets default values for this actor's properties
 	ASwitch();
 
@@ -44,7 +73,7 @@ protected:
 	UFUNCTION()
 	void OnBoxBeginOverlap(UPrimitiveComponent* OverlapComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

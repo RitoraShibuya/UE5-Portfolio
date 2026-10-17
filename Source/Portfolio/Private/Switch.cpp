@@ -4,6 +4,8 @@
 #include "Switch.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
+#include "Math/Color.h"
+#include "Materials/MaterialInstanceDynamic.h"
 
 // Sets default values
 ASwitch::ASwitch()
@@ -22,14 +24,20 @@ ASwitch::ASwitch()
 	OverlapBox->SetupAttachment(RootComponent);
 
 	OverlapBox->OnComponentBeginOverlap.AddDynamic(this, &ASwitch::OnBoxBeginOverlap);
-
+	//OverlayMaterial = Mesh->GetOverlayMaterial();
 }
 
 // Called when the game starts or when spawned
 void ASwitch::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	DynamicInstance = UMaterialInstanceDynamic::Create(OverlayMaterial, this);
+	Mesh->SetOverlayMaterial(DynamicInstance);
+	DynamicInstance->SetVectorParameterValue(
+		FName(ParamName),
+		OffColor
+	);
 }
 
 // Called every frame
@@ -48,12 +56,19 @@ void ASwitch::OnBoxBeginOverlap(
 	UPrimitiveComponent* OtherComp,
 	int32 OtherBodyIndex,
 	bool bFromSweep,
-	const FHitResult& SweepResult) {
-	UE_LOG(LogTemp, Warning, TEXT("Overlap"));
-	if (Gimmick) {
+	const FHitResult& SweepResult
+) 
+{
+	if (Gimmick && State == SwitchState::Off) 
+	{
+		State = SwitchState::On;
+		Mesh->SetOverlayMaterial(DynamicInstance);
+		DynamicInstance->SetVectorParameterValue(
+			FName(ParamName),
+			OnColor
+		);
 		if (IInteractInterface* ActorCheck = Cast<IInteractInterface>(Gimmick)) {
 			ActorCheck->OnInteract(OtherActor);
-			UE_LOG(LogTemp, Warning, TEXT("Switch"));
 		}
 	}
 }
