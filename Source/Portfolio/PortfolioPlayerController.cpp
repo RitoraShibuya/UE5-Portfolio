@@ -10,6 +10,7 @@
 #include "Portfolio.h"
 #include "Widgets/Input/SVirtualJoystick.h"
 #include "MainUI.h"
+#include "Kismet/GamePlayStatics.h"
 
 APortfolioPlayerController::APortfolioPlayerController()
 {
@@ -85,4 +86,22 @@ bool APortfolioPlayerController::ShouldUseTouchControls() const
 {
 	// are we on a mobile platform? Should we force touch?
 	return SVirtualJoystick::ShouldDisplayTouchInterface() || bForceTouchControls;
+}
+
+void APortfolioPlayerController::OnStartFocus(AActor* CameraActor,float BlendTime) {
+	SetViewTargetWithBlend(
+		CameraActor,
+		BlendTime,
+		EViewTargetBlendFunction::VTBlend_Cubic,
+		0.0f,
+		false);
+}
+
+void APortfolioPlayerController::OnEndFocus(AActor* CameraActor, float BlendTime) {
+	SetViewTargetWithBlend(
+		this,
+		BlendTime,
+		EViewTargetBlendFunction::VTBlend_Linear,
+		0.0f,
+		false);
 }

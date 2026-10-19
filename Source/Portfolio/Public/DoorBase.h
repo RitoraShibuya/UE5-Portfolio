@@ -5,12 +5,12 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "InteractInterface.h"
-#include "Door.generated.h"
+#include "DoorBase.generated.h"
 
 class UStaticMeshComponent;
 
 UCLASS()
-class PORTFOLIO_API ADoor : public AActor, public IInteractInterface
+class PORTFOLIO_API ADoorBase : public AActor, public IInteractInterface
 {
 	GENERATED_BODY()
 	
@@ -25,17 +25,18 @@ private:
 	float UpValue;
 public:	
 	// Sets default values for this actor's properties
-	ADoor();
-
-	virtual void OnInteract(AActor* InteractActor);
+	ADoorBase();
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
 	void Open();
+
+	UFUNCTION()
+	virtual void OnInteract(AActor* InteractActor);
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	
 
 };

@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Door.h"
+#include "DoorBase.h"
 #include "Components/StaticMeshComponent.h"
 
 // Sets default values
-ADoor::ADoor()
+ADoorBase::ADoorBase()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
@@ -17,25 +17,23 @@ ADoor::ADoor()
 	Mesh->SetupAttachment(RootComponent);
 }
 
-// Called when the game starts or when spawned
-void ADoor::BeginPlay()
+void ADoorBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
-// Called every frame
-void ADoor::Tick(float DeltaTime)
+void ADoorBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
-void ADoor::OnInteract(AActor* InteractActor) {
-	Open();
+void ADoorBase::OnInteract(AActor* InteractActor) {
+	
 }
 
-void ADoor::Open() {
+void ADoorBase::Open() {
 	Mesh->AddWorldOffset(FVector(0.0,0.0,UpValue));
-	UE_LOG(LogTemp, Warning, TEXT("Open"));
 }
+

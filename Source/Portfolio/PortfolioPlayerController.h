@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "CameraFocusInterface.h"
 #include "PortfolioPlayerController.generated.h"
 
 class UInputMappingContext;
@@ -11,14 +12,13 @@ class UUserWidget;
 
 class UMainUI;
 class UShooterBulletCounterUI;
-
 /**
  *  Simple first person Player Controller
  *  Manages the input mapping context.
  *  Overrides the Player Camera Manager class.
  */
 UCLASS(abstract, config="Game")
-class PORTFOLIO_API APortfolioPlayerController : public APlayerController
+class PORTFOLIO_API APortfolioPlayerController : public APlayerController, public ICameraFocusInterface
 {
 	GENERATED_BODY()
 	
@@ -65,4 +65,9 @@ protected:
 
 	/** Returns true if the player should use UMG touch controls */
 	bool ShouldUseTouchControls() const;
+
+	virtual void OnStartFocus(AActor* CameraActor, float BlendTime);
+
+	virtual void OnEndFocus(AActor* CameraActor, float BlendTime);
+
 };

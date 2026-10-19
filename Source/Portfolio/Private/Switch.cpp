@@ -67,8 +67,8 @@ void ASwitch::OnBoxBeginOverlap(
 			FName(ParamName),
 			OnColor
 		);
-		if (IInteractInterface* ActorCheck = Cast<IInteractInterface>(Gimmick)) {
-			ActorCheck->OnInteract(OtherActor);
+		if (IInteractInterface* Interface = Cast<IInteractInterface>(Gimmick)) {
+			Interface->OnInteract(OtherActor);
 		}
 	}
 }
