@@ -27,7 +27,7 @@ private:
 public:
 	AFocusDoor();
 protected:
-	virtual void OnInteract(AActor* InteractActor) override;
+	virtual void Open() override;
 
 	virtual void OnStartFocus(AActor* CameraActor, float BlendTime);
 

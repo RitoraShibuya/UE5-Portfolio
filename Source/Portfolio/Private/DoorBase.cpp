@@ -7,7 +7,7 @@
 // Sets default values
 ADoorBase::ADoorBase()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
 	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
@@ -30,10 +30,16 @@ void ADoorBase::Tick(float DeltaTime)
 }
 
 void ADoorBase::OnInteract(AActor* InteractActor) {
-	
+	SignalCount += 1;
+	if (SignalCount == SignalNeed) {
+		Open();
+	}
 }
 
 void ADoorBase::Open() {
-	Mesh->AddWorldOffset(FVector(0.0,0.0,UpValue));
+	OpenMesh();
 }
 
+void ADoorBase::OpenMesh() {
+	Mesh->AddWorldOffset(FVector(0.0, 0.0, UpValue));
+}

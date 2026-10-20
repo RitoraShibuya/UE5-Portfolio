@@ -13,17 +13,22 @@ UCLASS()
 class PORTFOLIO_API ADoorBase : public AActor, public IInteractInterface
 {
 	GENERATED_BODY()
-	
-private:
+
+protected:
 	UPROPERTY(VisibleAnywhere, Category = "Portfolio")
 	TObjectPtr<USceneComponent> Root;
 
-	UPROPERTY(EditAnywhere, Category = "Portfolio")
+	UPROPERTY(EditDefaultsOnly, Category = "Portfolio")
 	TObjectPtr<UStaticMeshComponent> Mesh;
 
 	UPROPERTY(EditAnywhere, Category = "Portfolio")
 	float UpValue;
-public:	
+
+	UPROPERTY(EditAnywhere, Category = "Portfolio")
+	int32 SignalNeed = 1;
+private:
+	int32 SignalCount = 0;
+public:
 	// Sets default values for this actor's properties
 	ADoorBase();
 protected:
@@ -31,12 +36,12 @@ protected:
 
 	virtual void Tick(float DeltaTime) override;
 
-	UFUNCTION()
-	void Open();
+	virtual void Open();
 
-	UFUNCTION()
+	void OpenMesh();
+
 	virtual void OnInteract(AActor* InteractActor);
-public:	
-	
+public:
+
 
 };

@@ -10,13 +10,13 @@ AFocusDoor::AFocusDoor() {
 	FocusCameraComponent->SetupAttachment(RootComponent);
 }
 
-void AFocusDoor::OnInteract(AActor* InteractActor) {
+void AFocusDoor::Open() {
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
 	if (ICameraFocusInterface* Interface = Cast<ICameraFocusInterface>(PlayerController)) {
 		Interface->OnStartFocus(this, 0.5);
 	}
 
-	Open();
+	OpenMesh();
 
 	FTimerHandle TimeHandele;
 	GetWorldTimerManager().SetTimer(

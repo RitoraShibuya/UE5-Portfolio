@@ -49,7 +49,7 @@ protected:
 	TObjectPtr<UStaticMeshComponent> Mesh;
 
 	UPROPERTY(EditAnywhere, Category = "Portfolio")
-	TObjectPtr<AActor> Gimmick;
+	TArray<TObjectPtr<AActor>> Gimmicks;
 
 
 	UPROPERTY(EditAnywhere, Category = "Portfolio")

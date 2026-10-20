@@ -10,7 +10,7 @@
 // Sets default values
 ASwitch::ASwitch()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
 
@@ -42,7 +42,8 @@ void ASwitch::BeginPlay()
 
 // Called every frame
 void ASwitch::Tick(float DeltaTime)
-{	Super::Tick(DeltaTime);
+{
+	Super::Tick(DeltaTime);
 
 }
 
@@ -57,9 +58,8 @@ void ASwitch::OnBoxBeginOverlap(
 	int32 OtherBodyIndex,
 	bool bFromSweep,
 	const FHitResult& SweepResult
-) 
-{
-	if (Gimmick && State == SwitchState::Off) 
+) {
+	if (State == SwitchState::Off)
 	{
 		State = SwitchState::On;
 		Mesh->SetOverlayMaterial(DynamicInstance);
@@ -67,8 +67,10 @@ void ASwitch::OnBoxBeginOverlap(
 			FName(ParamName),
 			OnColor
 		);
-		if (IInteractInterface* Interface = Cast<IInteractInterface>(Gimmick)) {
-			Interface->OnInteract(OtherActor);
+		for (AActor* Gimmick : Gimmicks) {
+			if (IInteractInterface* Interface = Cast<IInteractInterface>(Gimmick)) {
+				Interface->OnInteract(OtherActor);
+			}
 		}
 	}
 }
