@@ -5,6 +5,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "Math/Color.h"
+#include "SignalInterface.h"
 #include "Materials/MaterialInstanceDynamic.h"
 
 // Sets default values
@@ -51,6 +52,10 @@ void ASwitch::OnInteract(AActor* InteractActor) {
 
 }
 
+bool ASwitch::CanInteract() {
+	return State == SwitchState::Off;
+}
+
 void ASwitch::OnBoxBeginOverlap(
 	UPrimitiveComponent* OverlapComp,
 	AActor* OtherActor,
@@ -68,8 +73,8 @@ void ASwitch::OnBoxBeginOverlap(
 			OnColor
 		);
 		for (AActor* Gimmick : Gimmicks) {
-			if (IInteractInterface* Interface = Cast<IInteractInterface>(Gimmick)) {
-				Interface->OnInteract(OtherActor);
+			if (ISignalInterface* Interface = Cast<ISignalInterface>(Gimmick)) {
+				Interface->OnSignal(OtherActor);
 			}
 		}
 	}

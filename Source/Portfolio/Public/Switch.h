@@ -66,6 +66,8 @@ public:
 	ASwitch();
 
 	virtual void OnInteract(AActor* InteractActor);
+
+	virtual bool CanInteract() override;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

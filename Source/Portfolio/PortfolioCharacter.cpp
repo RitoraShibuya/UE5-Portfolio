@@ -9,12 +9,18 @@
 #include "InputActionValue.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Portfolio.h"
+#include "InteractInterface.h"
+#include "PickupInterface.h"
+#include "Engine/World.h"
+#include "CollisionQueryParams.h"
+#include "Engine/Hitresult.h"
+#include "PhysicsEngine/PhysicsHandleComponent.h"
 
 APortfolioCharacter::APortfolioCharacter()
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
-	
+
 	// Create the first person mesh that will be viewed only by this character's owner
 	FirstPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("First Person Mesh"));
 
@@ -42,10 +48,40 @@ APortfolioCharacter::APortfolioCharacter()
 	// Configure character movement
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 	GetCharacterMovement()->AirControl = 0.5f;
+
+	PhysicsComponent = CreateDefaultSubobject<UPhysicsHandleComponent>(TEXT("PhysicasHandle"));
+}
+
+void APortfolioCharacter::Tick(float DeltaTime) {
+	Super::Tick(DeltaTime);
+
+	FVector Start = FirstPersonCameraComponent->GetComponentLocation();
+	FVector End = Start + FirstPersonCameraComponent->GetForwardVector() * HitRange;
+
+	Hit = GetWorld()->LineTraceSingleByChannel(
+		Result,
+		Start,
+		End,
+		ECC_Visibility
+	);
+
+	switch (CurrentState)
+	{
+	case EPlayerState::None:
+		break;
+	case EPlayerState::Pickup:
+		PhysicsComponent->SetTargetLocationAndRotation(
+			End,
+			GetActorRotation()
+		);
+		break;
+	default:
+		break;
+	}
 }
 
 void APortfolioCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{	
+{
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
@@ -59,6 +95,8 @@ void APortfolioCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		// Looking/Aiming
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APortfolioCharacter::LookInput);
 		EnhancedInputComponent->BindAction(MouseLookAction, ETriggerEvent::Triggered, this, &APortfolioCharacter::LookInput);
+
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &APortfolioCharacter::DoInteract);
 	}
 	else
 	{
@@ -117,4 +155,36 @@ void APortfolioCharacter::DoJumpEnd()
 {
 	// pass StopJumping to the character
 	StopJumping();
+}
+
+void APortfolioCharacter::DoInteract()
+{
+	AActor* HitActor = Result.GetActor();
+	switch (CurrentState) {
+	default:
+		break;
+	case EPlayerState::None:
+		if (IInteractInterface* Interact = Cast<IInteractInterface>(HitActor)) {
+			if (!Interact->CanInteract()) {
+				return;
+			}
+			if (IPickupInterface* Pickup = Cast<IPickupInterface>(HitActor)) {
+				PhysicsComponent->GrabComponentAtLocationWithRotation(
+					Result.GetComponent(),
+					NAME_None,
+					Result.ImpactPoint,
+					Result.GetActor()->GetActorRotation()
+				);
+				Pickup->OnPickup(this);
+				CurrentState = EPlayerState::Pickup;
+			}
+		}
+		break;
+	case EPlayerState::Pickup:
+		PhysicsComponent->ReleaseComponent();
+		CurrentState = EPlayerState::None;
+		break;
+
+	}
+
 }

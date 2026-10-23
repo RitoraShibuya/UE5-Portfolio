@@ -29,7 +29,7 @@ void ADoorBase::Tick(float DeltaTime)
 
 }
 
-void ADoorBase::OnInteract(AActor* InteractActor) {
+void ADoorBase::OnSignal(AActor* InteractActor) {
 	SignalCount += 1;
 	if (SignalCount == SignalNeed) {
 		Open();

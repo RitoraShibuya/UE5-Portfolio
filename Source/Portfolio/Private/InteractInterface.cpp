@@ -4,3 +4,11 @@
 #include "InteractInterface.h"
 
 // Add default functionality here for any IInteractInterface functions that are not pure virtual.
+
+void IInteractInterface::OnInteract(AActor* InteractActor) {
+	
+}
+
+bool IInteractInterface::CanInteract() {
+	return true;
+}

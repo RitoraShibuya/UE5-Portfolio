@@ -11,7 +11,15 @@ class UInputComponent;
 class USkeletalMeshComponent;
 class UCameraComponent;
 class UInputAction;
+class UPhysicsHandleComponent;
 struct FInputActionValue;
+struct FHitResult;
+
+enum class EPlayerState : uint8 {
+	None,
+	Pickup
+};
+
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
@@ -31,6 +39,15 @@ class APortfolioCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FirstPersonCameraComponent;
 
+	UPROPERTY(VisibleAnywhere, Category = "Portfolio")
+	TObjectPtr<UPhysicsHandleComponent> PhysicsComponent;
+
+private:
+	FHitResult Result;
+
+	bool Hit;
+
+	EPlayerState CurrentState = EPlayerState::None;
 protected:
 
 	/** Jump Input Action */
@@ -49,10 +66,16 @@ protected:
 	UPROPERTY(EditAnywhere, Category ="Input")
 	class UInputAction* MouseLookAction;
 	
+	UPROPERTY(EditAnywhere, Category = "Input")
+	class UInputAction* InteractAction;
+
+	UPROPERTY(EditAnywhere, Category = "Portfolio")
+	float HitRange = 500.0f;
 public:
 	APortfolioCharacter();
 
 protected:
+	virtual void Tick(float DeltaTime) override;
 
 	/** Called from Input Actions for movement input */
 	void MoveInput(const FInputActionValue& Value);
@@ -76,6 +99,10 @@ protected:
 	UFUNCTION(BlueprintCallable, Category="Input")
 	virtual void DoJumpEnd();
 
+	
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	virtual void DoInteract();
+
 protected:
 
 	/** Set up input action bindings */
@@ -89,6 +116,5 @@ public:
 
 	/** Returns first person camera component **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
-
 };
 

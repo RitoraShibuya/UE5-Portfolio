@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "InteractInterface.h"
+#include "SignalInterface.h"
 #include "DoorBase.generated.h"
 
 class UStaticMeshComponent;
 
 UCLASS()
-class PORTFOLIO_API ADoorBase : public AActor, public IInteractInterface
+class PORTFOLIO_API ADoorBase : public AActor, public ISignalInterface
 {
 	GENERATED_BODY()
 
@@ -40,7 +40,7 @@ protected:
 
 	void OpenMesh();
 
-	virtual void OnInteract(AActor* InteractActor);
+	virtual void OnSignal(AActor* InteractActor);
 public:
 
 
