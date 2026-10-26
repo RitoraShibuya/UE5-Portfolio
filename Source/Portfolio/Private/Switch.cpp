@@ -2,7 +2,6 @@
 
 
 #include "Switch.h"
-#include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "Math/Color.h"
 #include "SignalInterface.h"
@@ -13,13 +12,6 @@ ASwitch::ASwitch()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
-
-
-	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
-	RootComponent = Root;
-
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	Mesh->SetupAttachment(RootComponent);
 
 	OverlapBox = CreateDefaultSubobject<UBoxComponent>(TEXT("OverlapBox"));
 	OverlapBox->SetupAttachment(RootComponent);
@@ -34,7 +26,7 @@ void ASwitch::BeginPlay()
 	Super::BeginPlay();
 
 	DynamicInstance = UMaterialInstanceDynamic::Create(OverlayMaterial, this);
-	Mesh->SetOverlayMaterial(DynamicInstance);
+	MeshComponent->SetOverlayMaterial(DynamicInstance);
 	DynamicInstance->SetVectorParameterValue(
 		FName(ParamName),
 		OffColor
@@ -48,14 +40,6 @@ void ASwitch::Tick(float DeltaTime)
 
 }
 
-void ASwitch::OnInteract(AActor* InteractActor) {
-
-}
-
-bool ASwitch::CanInteract() {
-	return State == SwitchState::Off;
-}
-
 void ASwitch::OnBoxBeginOverlap(
 	UPrimitiveComponent* OverlapComp,
 	AActor* OtherActor,
@@ -67,7 +51,7 @@ void ASwitch::OnBoxBeginOverlap(
 	if (State == SwitchState::Off)
 	{
 		State = SwitchState::On;
-		Mesh->SetOverlayMaterial(DynamicInstance);
+		MeshComponent->SetOverlayMaterial(DynamicInstance);
 		DynamicInstance->SetVectorParameterValue(
 			FName(ParamName),
 			OnColor

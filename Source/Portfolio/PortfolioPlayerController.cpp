@@ -9,7 +9,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Portfolio.h"
 #include "Widgets/Input/SVirtualJoystick.h"
-#include "MainUI.h"
+#include "MainWidget.h"
 #include "Kismet/GamePlayStatics.h"
 
 APortfolioPlayerController::APortfolioPlayerController()
@@ -25,7 +25,7 @@ void APortfolioPlayerController::BeginPlay()
 	if (IsLocalPlayerController()) {
 
 		//MainUI生成
-		MainUI = CreateWidget<UMainUI>(this, MainUIWidgetClass);
+		MainUI = CreateWidget<UMainWidget>(this, MainUIWidgetClass);
 
 		if (MainUI)
 		{

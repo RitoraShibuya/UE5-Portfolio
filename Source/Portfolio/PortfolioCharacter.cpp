@@ -64,7 +64,20 @@ void APortfolioCharacter::Tick(float DeltaTime) {
 		End,
 		ECC_Visibility
 	);
-
+	if (Hit) {
+		AActor* UpdateActor = Result.GetActor();
+		if (HitActor != UpdateActor) {
+			if (IInteractInterface* Interact = Cast<IInteractInterface>(HitActor)) {
+				Interact->OnEndFocus();
+			}
+			HitActor = UpdateActor;
+			if (IInteractInterface* Interact = Cast<IInteractInterface>(HitActor)) {
+				if (Interact->CanInteract()) {
+					Interact->OnBeginFocus();
+				}
+			}
+		}
+	}
 	switch (CurrentState)
 	{
 	case EPlayerState::None:
@@ -162,9 +175,11 @@ void APortfolioCharacter::DoInteract()
 	switch (CurrentState) {
 	default:
 		break;
-	case EPlayerState::None: 
+	case EPlayerState::None:
 	{
-		AActor* HitActor = Result.GetActor();
+		if (!HitActor) {
+			return;
+		}
 		if (IInteractInterface* Interact = Cast<IInteractInterface>(HitActor)) {
 			if (!Interact->CanInteract()) {
 				return;
@@ -179,9 +194,12 @@ void APortfolioCharacter::DoInteract()
 				Pickup->OnPickup(this);
 				CurrentState = EPlayerState::Pickup;
 			}
+			else {
+				Interact->OnInteract(this);
+			}
 		}
 	}
-						   break;
+	break;
 	case EPlayerState::Pickup:
 		PhysicsComponent->ReleaseComponent();
 		CurrentState = EPlayerState::None;

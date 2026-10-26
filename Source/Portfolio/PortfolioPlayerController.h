@@ -10,7 +10,7 @@
 class UInputMappingContext;
 class UUserWidget;
 
-class UMainUI;
+class UMainWidget;
 class UShooterBulletCounterUI;
 /**
  *  Simple first person Player Controller
@@ -55,7 +55,7 @@ protected:
 
 	/*メインUIのポインタ*/
 	UPROPERTY()
-	TObjectPtr<UMainUI> MainUI;
+	TObjectPtr<UMainWidget> MainUI;
 
 	/** Gameplay initialization */
 	virtual void BeginPlay() override;

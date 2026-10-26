@@ -47,6 +47,8 @@ private:
 
 	bool Hit;
 
+	AActor* HitActor = nullptr;
+
 	EPlayerState CurrentState = EPlayerState::None;
 protected:
 

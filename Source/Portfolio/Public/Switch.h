@@ -3,8 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
-#include "InteractInterface.h"
+#include "InteractableSignalActorBase.h"
 #include "Switch.generated.h"
 
 class UStaticMeshComponent;
@@ -16,27 +15,15 @@ class UDynamicMaterialInstance;
 struct FHitResult;
 struct FLinearColor;
 
-UENUM()
-enum class SwitchState : uint8
-{
-	Off,
-	On
-};
-
 UCLASS()
-class PORTFOLIO_API ASwitch : public AActor, public IInteractInterface
+class PORTFOLIO_API ASwitch : public AInteractableSignalActorBase
 {
 	GENERATED_BODY()
 
 private:
-	UPROPERTY()
-	TObjectPtr<USceneComponent> Root;
 
 	UPROPERTY()
 	TObjectPtr<UBoxComponent> OverlapBox;
-
-	UPROPERTY()
-	SwitchState State = SwitchState::Off;
 
 	UPROPERTY()
 	TObjectPtr<UMaterialInstanceDynamic> DynamicInstance;
@@ -44,12 +31,6 @@ private:
 protected:
 	UPROPERTY(EditAnywhere, Category = "Portfolio")
 	UMaterialInterface* OverlayMaterial;
-
-	UPROPERTY(EditAnywhere, Category = "Portfolio")
-	TObjectPtr<UStaticMeshComponent> Mesh;
-
-	UPROPERTY(EditAnywhere, Category = "Portfolio")
-	TArray<TObjectPtr<AActor>> Gimmicks;
 
 
 	UPROPERTY(EditAnywhere, Category = "Portfolio")
@@ -65,9 +46,6 @@ public:
 	// Sets default values for this actor's properties
 	ASwitch();
 
-	virtual void OnInteract(AActor* InteractActor);
-
-	virtual bool CanInteract() override;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

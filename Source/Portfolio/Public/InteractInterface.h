@@ -25,4 +25,8 @@ public:
 	virtual void OnInteract(AActor* InteractActor);
 
 	virtual bool CanInteract();
+
+	virtual void OnBeginFocus();
+
+	virtual void OnEndFocus();
 };
