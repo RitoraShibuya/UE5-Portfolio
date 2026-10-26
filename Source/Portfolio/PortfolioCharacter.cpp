@@ -159,11 +159,12 @@ void APortfolioCharacter::DoJumpEnd()
 
 void APortfolioCharacter::DoInteract()
 {
-	AActor* HitActor = Result.GetActor();
 	switch (CurrentState) {
 	default:
 		break;
-	case EPlayerState::None:
+	case EPlayerState::None: 
+	{
+		AActor* HitActor = Result.GetActor();
 		if (IInteractInterface* Interact = Cast<IInteractInterface>(HitActor)) {
 			if (!Interact->CanInteract()) {
 				return;
@@ -179,12 +180,12 @@ void APortfolioCharacter::DoInteract()
 				CurrentState = EPlayerState::Pickup;
 			}
 		}
-		break;
+	}
+						   break;
 	case EPlayerState::Pickup:
 		PhysicsComponent->ReleaseComponent();
 		CurrentState = EPlayerState::None;
 		break;
-
 	}
 
 }
