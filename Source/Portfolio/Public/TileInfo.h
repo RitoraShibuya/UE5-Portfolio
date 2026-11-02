@@ -50,6 +50,12 @@ public:
 	FVector Pos = FVector(0.0f, 0.0f, 0.0f);
 };
 
+struct FMapArrayInfo {
+	FVector2D Pos;
+	ETileType Type;
+	ETileDirectionType Direction;
+};
+
 //class PORTFOLIO_API EnumInfo
 //{
 //public:

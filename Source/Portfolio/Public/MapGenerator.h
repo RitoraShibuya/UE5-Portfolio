@@ -13,8 +13,8 @@ UCLASS()
 class PORTFOLIO_API AMapGenerator : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	AMapGenerator();
 
@@ -22,7 +22,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -30,11 +30,24 @@ private:
 	void GenerateMapArray();
 
 	void GenerateMap();
+
+	TArray<ETileDirectionType> GetCandidate(FVector2D Pos, ETileType Type, ETileDirectionType Direction);
 private:
 	TArray<FGenerateData> MapInfo;
+	TArray<FMapArrayInfo> MapArrayInfo;
+	TArray<FMapArrayInfo> NextMapInfo;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Portfolio")
-	TSubclassOf<ATileBase> StartTile;
+	TSubclassOf<ATileBase> RoadTile;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Portfolio")
+	TSubclassOf<ATileBase> TRoadTile;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Portfolio")
+	TSubclassOf<ATileBase> XRoadTile;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Portfolio")
+	TSubclassOf<ATileBase> RoomTile;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Portfolio")
 	TArray<TSubclassOf<ATileBase>> Tiles;
