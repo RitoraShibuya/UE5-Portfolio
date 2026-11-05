@@ -48,18 +48,21 @@ void AMapGenerator::GenerateMapArray() {
 	ETileDirectionType CurrentDirection = ETileDirectionType::Up;
 	FMapArrayInfo Next;
 
-	//MapArrayInfo.Add(FMapArrayInfo(CurrentPos, CurrentType, CurrentDirection));
+	MapArrayInfo.Add(FMapArrayInfo(CurrentPos, CurrentType, CurrentDirection));
+	CurrentPos += Poses[0];
 
 	for (int i = 0; i < 100; i++)
 	{
-		TArray<ETileDirectionType> Candidate = GetCandidate(CurrentPos, CurrentDirection);
 		FNextInfo NextCandidate = GetNextCandidate(CurrentPos, CurrentDirection);
 
-		int32 NextCandidateNum = -1;
+		int32 NextDirectionNum = -1;
+		int32 NextTypeNum = -1;
 		if (!NextCandidate.Directions.IsEmpty()) {
-			NextCandidateNum = FMath::RandRange(0, NextCandidate.Directions.Num() - 1);
+			NextDirectionNum = NextCandidate.Directions.Num();
 		}
 		else {
+			CurrentType = ETileType::Room;
+			MapArrayInfo.Add(FMapArrayInfo(CurrentPos, CurrentType, CurrentDirection));
 			if (!NextMapInfo.IsEmpty()) {
 				Next = NextMapInfo.Pop();
 				CurrentPos = Next.Pos;
@@ -68,64 +71,116 @@ void AMapGenerator::GenerateMapArray() {
 				continue;
 			}
 			else {
-				break;
+				return;
 			}
 		}
 
-		CurrentDirection = Candidate[NextCandidateNum];
+		if (!NextCandidate.Types.IsEmpty()) {
+			NextTypeNum = NextCandidate.Types.Num();
+			/*for (int j = 0; j < NextTypeNum; j++)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Type: %s"), *UEnum::GetValueAsString(NextCandidate.Types[j]));
+			}*/
+		}
 
-		//
-		int32 CandidateNum = -1;
-		int32 DirectionNum = 0;
-		if (!Candidate.IsEmpty()) {
-			CandidateNum = Candidate.Num() - 1;
-		}
-		if (CandidateNum > 0) {
-			DirectionNum = FMath::RandRange(0, CandidateNum);
-			for (int j = 0; j <= CandidateNum; j++) {
-				//NextMapInfo.Add(FMapArrayInfo(CurrentPos, CurrentType, CurrentDirection));
-			}
-		}
-		else if (CandidateNum == 0) {
-			DirectionNum = 0;
-		}
-		else {
-			if (!NextMapInfo.IsEmpty()) {
-				Next = NextMapInfo.Pop();
-				CurrentPos = Next.Pos;
-				CurrentType = Next.Type;
-				CurrentDirection = Next.Direction;
-				continue;
-			}
-			else {
-				break;
-			}
-		}
+		int32 TypeNum = FMath::RandRange(0, NextTypeNum - 1);
+		CurrentType = NextCandidate.Types[TypeNum];
 
 		MapArrayInfo.Add(FMapArrayInfo(CurrentPos, CurrentType, CurrentDirection));
-		CurrentDirection = Candidate[DirectionNum];
-		//
+
+		FVector2D Vec;
+		switch (CurrentType)
+		{
+		case ETileType::Road:
+			break;
+		case ETileType::TRoad:
+			NextCandidate.Directions.Remove(CurrentDirection);
+			CurrentDirection = NextCandidate.Directions[FMath::RandRange(0, NextCandidate.Directions.Num() - 1)];
+			NextCandidate.Directions.Remove(CurrentDirection);
+
+			if (!NextCandidate.Directions.IsEmpty()) {
+				switch (NextCandidate.Directions[0])
+				{
+				case ETileDirectionType::Up:
+					Vec = Poses[0];
+					break;
+				case ETileDirectionType::Down:
+					Vec = Poses[1];
+					break;
+				case ETileDirectionType::Left:
+					Vec = Poses[2];
+					break;
+				case ETileDirectionType::Right:
+					Vec = Poses[3];
+					break;
+				default:
+					break;
+				}
+				NextMapInfo.Add(FMapArrayInfo(CurrentPos + Vec, CurrentType, NextCandidate.Directions[0]));
+			}
+			else {
+
+			}
+			break;
+		case ETileType::XRoad:
+			CurrentDirection = NextCandidate.Directions[FMath::RandRange(0, NextCandidate.Directions.Num() - 1)];
+			NextCandidate.Directions.Remove(CurrentDirection);
+			for (int32 j = 0; j < NextCandidate.Directions.Num(); j++)
+			{
+				switch (NextCandidate.Directions[j])
+				{
+				case ETileDirectionType::Up:
+					Vec = Poses[0];
+					break;
+				case ETileDirectionType::Down:
+					Vec = Poses[1];
+					break;
+				case ETileDirectionType::Left:
+					Vec = Poses[2];
+					break;
+				case ETileDirectionType::Right:
+					Vec = Poses[3];
+					break;
+				default:
+					break;
+				}
+				NextMapInfo.Add(FMapArrayInfo(CurrentPos + Vec, CurrentType, NextCandidate.Directions[j]));
+			}
+			break;
+		case ETileType::Room:
+			if (!NextMapInfo.IsEmpty()) {
+				Next = NextMapInfo.Pop();
+				CurrentPos = Next.Pos;
+				CurrentType = Next.Type;
+				CurrentDirection = Next.Direction;
+				continue;
+			}
+			else {
+				return;
+			}
+			break;
+		default:
+			break;
+		}
+
 
 		FVector2D NextVec;
-		for (int j = 0; j <= CandidateNum; j++)
+		switch (CurrentDirection)
 		{
-			switch (CurrentDirection)
-			{
-			case ETileDirectionType::Up:
-				NextVec = Poses[0];
-				break;
-			case ETileDirectionType::Down:
-				NextVec = Poses[1];
-				break;
-			case ETileDirectionType::Left:
-				NextVec = Poses[2];
-				break;
-			case ETileDirectionType::Right:
-				NextVec = Poses[3];
-				break;
-			default:
-				break;
-			}
+		case ETileDirectionType::Up:
+			NextVec = Poses[0];
+			break;
+		case ETileDirectionType::Down:
+			NextVec = Poses[1];
+			break;
+		case ETileDirectionType::Left:
+			NextVec = Poses[2];
+			break;
+		case ETileDirectionType::Right:
+			NextVec = Poses[3];
+			break;
+		default:
+			break;
 		}
 		CurrentPos += NextVec;
 	}
@@ -146,21 +201,23 @@ FNextInfo AMapGenerator::GetNextCandidate(FVector2D Pos, ETileDirectionType Dire
 
 	if (CandidateNum >= 3) {
 		Types.Add(ETileType::XRoad);
+		Types.Add(ETileType::Road);
+		Types.Add(ETileType::TRoad);
 	}
 	else if (CandidateNum == 2) {
-		for (const ETileDirectionType& Dir : Directions)
+		bool CanStreet = false;
+		for (const ETileDirectionType Dir : Directions)
 		{
-			bool CanStreet = false;
 			if (Dir == Direction) {
 				CanStreet = true;
 			}
 
-			if (CanStreet) {
-				Types.Add(ETileType::Road);
-			}
-			else {
-				Types.Add(ETileType::TRoad);
-			}
+		}
+		if (CanStreet) {
+			Types.Add(ETileType::Road);
+		}
+		else {
+			Types.Add(ETileType::TRoad);
 		}
 	}
 	else if (CandidateNum == 1) {
@@ -169,16 +226,13 @@ FNextInfo AMapGenerator::GetNextCandidate(FVector2D Pos, ETileDirectionType Dire
 		}
 	}
 
-	Nexts.Types = Types;
 	Nexts.Directions = Directions;
+	Nexts.Types = Types;
 
 	return Nexts;
 }
 
 TArray<ETileDirectionType> AMapGenerator::GetCandidate(FVector2D Pos, ETileDirectionType Direction) {
-
-	TArray<ETileDirectionType> Excluded;
-
 	TArray<FVector2D> NextVecs = {
 	FVector2D(0,1),
 	FVector2D(0,-1),
@@ -193,20 +247,6 @@ TArray<ETileDirectionType> AMapGenerator::GetCandidate(FVector2D Pos, ETileDirec
 		ETileDirectionType::Right
 	};
 
-	for (int i = 0; i < 4; i++)
-	{
-		for (const FMapArrayInfo& Info : MapArrayInfo) {
-			if (Info.Pos == Pos + NextVecs[i]) {
-				Excluded.Add(Directions[i]);
-			}
-		}
-		for (const FMapArrayInfo& Info : NextMapInfo) {
-			if (Info.Pos == Pos + NextVecs[i]) {
-				Excluded.Add(Directions[i]);
-			}
-		}
-	}
-
 	TArray<ETileDirectionType> Candinate = {
 		ETileDirectionType::Up,
 		ETileDirectionType::Down,
@@ -214,9 +254,19 @@ TArray<ETileDirectionType> AMapGenerator::GetCandidate(FVector2D Pos, ETileDirec
 		ETileDirectionType::Right
 	};
 
-	Candinate.RemoveAll([&](ETileDirectionType Dir) {
-		return Excluded.Contains(Dir);
-		});
+	for (int i = 0; i < 4; i++)
+	{
+		for (const FMapArrayInfo Info : MapArrayInfo) {
+			if (Info.Pos == Pos + NextVecs[i]) {
+				Candinate.Remove(Directions[i]);
+			}
+		}
+		for (const FMapArrayInfo Info : NextMapInfo) {
+			if (Info.Pos == Pos + NextVecs[i]) {
+				Candinate.Remove(Directions[i]);
+			}
+		}
+	}
 
 	return Candinate;
 }
@@ -224,7 +274,7 @@ TArray<ETileDirectionType> AMapGenerator::GetCandidate(FVector2D Pos, ETileDirec
 void AMapGenerator::GenerateMap() {
 	for (const FMapArrayInfo& Info : MapArrayInfo)
 	{
-		FVector CurrentPos = FVector(Info.Pos.Y * 1000, Info.Pos.X * 1000, 0.0);
+		FVector CurrentPos = FVector(Info.Pos.Y * 3000, Info.Pos.X * 3000, 0.0);
 		TSubclassOf<ATileBase> Subclass;
 		switch (Info.Type)
 		{

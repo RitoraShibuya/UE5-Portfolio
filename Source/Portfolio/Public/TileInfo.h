@@ -34,6 +34,7 @@ struct FTileData
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(EditAnywhere, Category = "Protfolio");
 	ETileDirectionType Type = ETileDirectionType::Up;
 
 	UPROPERTY(EditAnywhere, Category = "Protfolio",meta = (MakeEditWidget = true));
