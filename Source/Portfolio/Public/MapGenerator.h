@@ -31,7 +31,9 @@ private:
 
 	void GenerateMap();
 
-	TArray<ETileDirectionType> GetCandidate(FVector2D Pos, ETileType Type, ETileDirectionType Direction);
+	TArray<ETileDirectionType> GetCandidate(FVector2D Pos, ETileDirectionType Direction);
+
+	FNextInfo GetNextCandidate(FVector2D Pos, ETileDirectionType Direction);
 private:
 	TArray<FGenerateData> MapInfo;
 	TArray<FMapArrayInfo> MapArrayInfo;

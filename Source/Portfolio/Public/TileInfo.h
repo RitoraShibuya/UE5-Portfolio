@@ -56,6 +56,18 @@ struct FMapArrayInfo {
 	ETileDirectionType Direction;
 };
 
+
+USTRUCT()
+struct FNextInfo
+{
+	GENERATED_BODY()
+
+public:
+	TArray<ETileType> Types;
+	TArray<ETileDirectionType> Directions;
+};
+
+
 //class PORTFOLIO_API EnumInfo
 //{
 //public:
