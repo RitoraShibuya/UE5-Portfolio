@@ -12,6 +12,7 @@ class USkeletalMeshComponent;
 class UCameraComponent;
 class UInputAction;
 class UPhysicsHandleComponent;
+class USpotLightComponent;
 struct FInputActionValue;
 struct FHitResult;
 
@@ -41,6 +42,9 @@ class APortfolioCharacter : public ACharacter
 
 	UPROPERTY(VisibleAnywhere, Category = "Portfolio")
 	TObjectPtr<UPhysicsHandleComponent> PhysicsComponent;
+
+	UPROPERTY(VisibleAnywhere, Category = "Portfolio")
+	TObjectPtr<USpotLightComponent> SpotLightComponent;
 
 private:
 	FHitResult Result;

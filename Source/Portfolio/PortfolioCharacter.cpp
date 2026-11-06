@@ -15,6 +15,7 @@
 #include "CollisionQueryParams.h"
 #include "Engine/Hitresult.h"
 #include "PhysicsEngine/PhysicsHandleComponent.h"
+#include "Components/SpotLightComponent.h"
 
 APortfolioCharacter::APortfolioCharacter()
 {
@@ -50,6 +51,9 @@ APortfolioCharacter::APortfolioCharacter()
 	GetCharacterMovement()->AirControl = 0.5f;
 
 	PhysicsComponent = CreateDefaultSubobject<UPhysicsHandleComponent>(TEXT("PhysicasHandle"));
+
+	SpotLightComponent = CreateDefaultSubobject<USpotLightComponent>(TEXT("SpotLightComponet"));
+	SpotLightComponent->SetupAttachment(FirstPersonCameraComponent);
 }
 
 void APortfolioCharacter::Tick(float DeltaTime) {

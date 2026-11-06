@@ -274,7 +274,7 @@ TArray<ETileDirectionType> AMapGenerator::GetCandidate(FVector2D Pos, ETileDirec
 void AMapGenerator::GenerateMap() {
 	for (const FMapArrayInfo& Info : MapArrayInfo)
 	{
-		FVector CurrentPos = FVector(Info.Pos.Y * 3000, Info.Pos.X * 3000, 0.0);
+		FVector CurrentPos = FVector(Info.Pos.Y * 2000, Info.Pos.X * 2000, 0.0);
 		TSubclassOf<ATileBase> Subclass;
 		switch (Info.Type)
 		{
@@ -317,105 +317,5 @@ void AMapGenerator::GenerateMap() {
 		GenerateTile->AddActorWorldRotation(CurrentRotation);
 	}
 
-	//初期変数宣言
-	//int32 MaxNum = Tiles.Num() - 1;
-	//FVector CurrentLocation = FVector(0.0f, 0.0f, 0.0f);
-
-	////次回タイル抽選
-	//int32 TileTypeIndex = FMath::RandRange(0, MaxNum);
-	//ATileBase* Tile = StartTile->GetDefaultObject<ATileBase>();
-
-	////生成
-	//ATileBase* GenerateTile = GetWorld()->SpawnActor<ATileBase>(StartTile);
-
-	////配置
-	//GenerateTile->SetActorLocation(CurrentLocation);
-
-	////次回接続地点抽選
-	//int32 Num = Tile->GetTileDataArraySize() - 1;
-	//int32 NextTilePosIndex = FMath::RandRange(0, Num);
-	//FTileData NextTileData = Tile->GetTileData(NextTilePosIndex);
-
-	////次回用回転
-	//FVector NextLocation = NextTileData.Pos;
-
-	////次回接続地点更新
-	//CurrentLocation += GenerateTile->GetActorLocation() + NextLocation;
-
-	////回転計算
-	//FRotator NextRotation = FRotator(0.0, 0.0, 0.0);
-	//switch (NextTileData.Type)
-	//{
-	//default:
-	//	break;
-	//case ETileDirectionType::Up:
-	//	break;
-	//case ETileDirectionType::Down:
-	//	NextRotation.Yaw = 180.0f;
-	//	break;
-	//case ETileDirectionType::Left:
-	//	NextRotation.Yaw = 270.0f;
-	//	break;
-	//case ETileDirectionType::Right:
-	//	NextRotation.Yaw = 90.0f;
-	//	break;
-	//}
-
-
-	//GenerateTile->SetActorRotation(NextRotation);
-
-	//for (int32 i = 0; i < 200; i++)
-	//{
-	//	TileTypeIndex = FMath::RandRange(0, MaxNum);
-	//	Tile = Tiles[TileTypeIndex]->GetDefaultObject<ATileBase>();
-
-	//	Num = Tile->GetTileDataArraySize() - 1;
-	//	NextTilePosIndex = FMath::RandRange(0, Num);
-	//	NextTileData = Tile->GetTileData(NextTilePosIndex);
-
-	//	FTileData JointLocation = Tile->GetJointData();
-
-	//	switch (JointLocation.Type)
-	//	{
-	//	default:
-	//		break;
-	//	case ETileDirectionType::Up:
-	//		break;
-	//	case ETileDirectionType::Down:
-	//		NextRotation.Yaw = 180.0f;
-	//		break;
-	//	case ETileDirectionType::Left:
-	//		NextRotation.Yaw = 270.0f;
-	//		break;
-	//	case ETileDirectionType::Right:
-	//		NextRotation.Yaw = 90.0f;
-	//		break;
-	//	}
-
-	//	GenerateTile = GetWorld()->SpawnActor<ATileBase>(Tiles[TileTypeIndex]);
-	//	GenerateTile->SetActorRotation(NextRotation);
-
-	//	NextLocation = NextTileData.Pos;
-	//	CurrentLocation += CurrentLocation + NextLocation;
-
-
-	//	NextRotation = FRotator(0.0, 0.0, 0.0);
-	//	switch (NextTileData.Type)
-	//	{
-	//	default:
-	//		break;
-	//	case ETileDirectionType::Up:
-	//		break;
-	//	case ETileDirectionType::Down:
-	//		NextRotation.Yaw = 180.0f;
-	//		break;
-	//	case ETileDirectionType::Left:
-	//		NextRotation.Yaw = 270.0f;
-	//		break;
-	//	case ETileDirectionType::Right:
-	//		NextRotation.Yaw = 90.0f;
-	//		break;
-	//	}
-
-	//}
+	
 }

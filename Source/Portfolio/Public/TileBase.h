@@ -38,9 +38,8 @@ public:
 		return Point[index];
 	};
 private:
+	UPROPERTY(EditAnywhere, Category = "Portfolio")
 	ETileType Type;
-
-	ETileDirectionType DirectionType;
 
 	UPROPERTY(EditAnywhere, Category = "Portfolio")
 	FTileData JointPoint;
