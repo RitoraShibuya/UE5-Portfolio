@@ -35,9 +35,14 @@ private:
 
 	FNextInfo GetNextCandidate(FVector2D Pos, ETileDirectionType Direction);
 private:
-	TArray<FGenerateData> MapInfo;
 	TArray<FMapArrayInfo> MapArrayInfo;
 	TArray<FMapArrayInfo> NextMapInfo;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Portfolio")
+	TSubclassOf<ATileBase> StartTile;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Portfolio")
+	TSubclassOf<ATileBase> EndTile;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Portfolio")
 	TSubclassOf<ATileBase> RoadTile;
@@ -51,6 +56,5 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Portfolio")
 	TSubclassOf<ATileBase> RoomTile;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Portfolio")
-	TArray<TSubclassOf<ATileBase>> Tiles;
+	bool IsGoalMaked = false;
 };

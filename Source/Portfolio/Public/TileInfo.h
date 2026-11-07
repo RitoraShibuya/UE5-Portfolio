@@ -22,10 +22,12 @@ enum class ETileDirectionType
 UENUM()
 enum class ETileType
 {
-	Road,
-	TRoad,
-	XRoad,
-	Room
+	Start = 0,
+	End = 1,
+	Room = 2,
+	Road = 3,
+	TRoad = 4,
+	XRoad = 5,
 };
 
 USTRUCT()
@@ -39,16 +41,6 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Protfolio",meta = (MakeEditWidget = true));
 	FVector Pos;
-};
-
-USTRUCT()
-struct FGenerateData
-{
-	GENERATED_BODY()
-
-public:
-	FRotator Rotation = FRotator(0.0f,0.0f,0.0f);
-	FVector Pos = FVector(0.0f, 0.0f, 0.0f);
 };
 
 struct FMapArrayInfo {
@@ -68,10 +60,3 @@ public:
 	TArray<ETileDirectionType> Directions;
 };
 
-
-//class PORTFOLIO_API EnumInfo
-//{
-//public:
-//	EnumInfo();
-//	~EnumInfo();
-//};

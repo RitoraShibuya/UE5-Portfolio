@@ -8,12 +8,17 @@
 #include "TileBase.generated.h"
 
 class ATargetPoint;
+class UStaticMeshComponent;
 
 UCLASS()
 class PORTFOLIO_API ATileBase : public AActor
 {
 	GENERATED_BODY()
 	
+private:
+	UPROPERTY(VisibleAnywhere, Category = "Portfolio")
+	TObjectPtr<UStaticMeshComponent> MeshComponent;
+
 public:	
 	// Sets default values for this actor's properties
 	ATileBase();

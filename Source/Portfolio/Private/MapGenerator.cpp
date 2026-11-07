@@ -36,15 +36,8 @@ void AMapGenerator::GenerateMapArray() {
 		FVector2D(1,0)
 	};
 
-	TArray<ETileType> TileTypes{
-		ETileType::Road,
-		ETileType::TRoad,
-		ETileType::XRoad,
-		ETileType::Room,
-	};
-
 	FVector2D CurrentPos = FVector2D(0, 0);
-	ETileType CurrentType = ETileType::Road;
+	ETileType CurrentType = ETileType::Start;
 	ETileDirectionType CurrentDirection = ETileDirectionType::Up;
 	FMapArrayInfo Next;
 
@@ -61,7 +54,7 @@ void AMapGenerator::GenerateMapArray() {
 			NextDirectionNum = NextCandidate.Directions.Num();
 		}
 		else {
-			CurrentType = ETileType::Room;
+			CurrentType = ETileType::End;
 			MapArrayInfo.Add(FMapArrayInfo(CurrentPos, CurrentType, CurrentDirection));
 			if (!NextMapInfo.IsEmpty()) {
 				Next = NextMapInfo.Pop();
@@ -77,10 +70,6 @@ void AMapGenerator::GenerateMapArray() {
 
 		if (!NextCandidate.Types.IsEmpty()) {
 			NextTypeNum = NextCandidate.Types.Num();
-			/*for (int j = 0; j < NextTypeNum; j++)
-			{
-				UE_LOG(LogTemp, Warning, TEXT("Type: %s"), *UEnum::GetValueAsString(NextCandidate.Types[j]));
-			}*/
 		}
 
 		int32 TypeNum = FMath::RandRange(0, NextTypeNum - 1);
@@ -91,6 +80,20 @@ void AMapGenerator::GenerateMapArray() {
 		FVector2D Vec;
 		switch (CurrentType)
 		{
+		case ETileType::Start:
+		case ETileType::End:
+		case ETileType::Room:
+			if (!NextMapInfo.IsEmpty()) {
+				Next = NextMapInfo.Pop();
+				CurrentPos = Next.Pos;
+				CurrentType = Next.Type;
+				CurrentDirection = Next.Direction;
+				continue;
+			}
+			else {
+				return;
+			}
+			break;
 		case ETileType::Road:
 			break;
 		case ETileType::TRoad:
@@ -118,9 +121,6 @@ void AMapGenerator::GenerateMapArray() {
 				}
 				NextMapInfo.Add(FMapArrayInfo(CurrentPos + Vec, CurrentType, NextCandidate.Directions[0]));
 			}
-			else {
-
-			}
 			break;
 		case ETileType::XRoad:
 			CurrentDirection = NextCandidate.Directions[FMath::RandRange(0, NextCandidate.Directions.Num() - 1)];
@@ -145,18 +145,6 @@ void AMapGenerator::GenerateMapArray() {
 					break;
 				}
 				NextMapInfo.Add(FMapArrayInfo(CurrentPos + Vec, CurrentType, NextCandidate.Directions[j]));
-			}
-			break;
-		case ETileType::Room:
-			if (!NextMapInfo.IsEmpty()) {
-				Next = NextMapInfo.Pop();
-				CurrentPos = Next.Pos;
-				CurrentType = Next.Type;
-				CurrentDirection = Next.Direction;
-				continue;
-			}
-			else {
-				return;
 			}
 			break;
 		default:
@@ -191,7 +179,7 @@ FNextInfo AMapGenerator::GetNextCandidate(FVector2D Pos, ETileDirectionType Dire
 	FNextInfo Nexts;
 
 	TArray<ETileDirectionType> Directions = GetCandidate(Pos, Direction);
-	TArray<ETileType> Types = { ETileType::Room };
+	TArray<ETileType> Types = {ETileType::Room};
 
 	int32 CandidateNum = 0;
 	int32 DirectionNum = 0;
@@ -225,6 +213,10 @@ FNextInfo AMapGenerator::GetNextCandidate(FVector2D Pos, ETileDirectionType Dire
 			Types.Add(ETileType::Road);
 		}
 	}
+	/*else if (!IsGoalMaked) {
+		Types.Add(ETileType::End);
+		IsGoalMaked = true;
+	}*/
 
 	Nexts.Directions = Directions;
 	Nexts.Types = Types;
@@ -280,6 +272,14 @@ void AMapGenerator::GenerateMap() {
 		{
 		default:
 			break;
+		case ETileType::Start:
+			Subclass = StartTile;
+			break;
+		case ETileType::End:
+			Subclass = EndTile;
+			break;
+		case ETileType::Room:
+			Subclass = RoomTile;
 		case ETileType::Road:
 			Subclass = RoadTile;
 			break;
@@ -288,9 +288,6 @@ void AMapGenerator::GenerateMap() {
 			break;
 		case ETileType::XRoad:
 			Subclass = XRoadTile;
-			break;
-		case ETileType::Room:
-			Subclass = RoomTile;
 			break;
 		}
 
