@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/TargetPoint.h"
 #include "TileInfo.generated.h"
 
 /**
@@ -22,12 +21,12 @@ enum class ETileDirectionType
 UENUM()
 enum class ETileType
 {
-	Start = 0,
-	End = 1,
-	Room = 2,
-	Road = 3,
-	TRoad = 4,
-	XRoad = 5,
+	Road = 0,
+	TRoad = 1,
+	XRoad = 2,
+	Room = 3,
+	Start = 4,
+	End = 5,
 };
 
 USTRUCT()
