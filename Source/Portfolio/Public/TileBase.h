@@ -15,10 +15,21 @@ class PORTFOLIO_API ATileBase : public AActor
 {
 	GENERATED_BODY()
 	
-private:
+protected:
+	UPROPERTY()
+	TObjectPtr<USceneComponent> Root;
+
 	UPROPERTY(VisibleAnywhere, Category = "Portfolio")
 	TObjectPtr<UStaticMeshComponent> MeshComponent;
 
+	UPROPERTY(EditAnywhere, Category = "Portfolio")
+	ETileType Type;
+
+	UPROPERTY(EditAnywhere, Category = "Portfolio")
+	FTileData JointPoint;
+
+	UPROPERTY(EditAnywhere, Category = "Portfolio")
+	TArray<FTileData> Point;
 public:	
 	// Sets default values for this actor's properties
 	ATileBase();
@@ -42,13 +53,4 @@ public:
 	FTileData GetTileData(int32 index) {
 		return Point[index];
 	};
-private:
-	UPROPERTY(EditAnywhere, Category = "Portfolio")
-	ETileType Type;
-
-	UPROPERTY(EditAnywhere, Category = "Portfolio")
-	FTileData JointPoint;
-
-	UPROPERTY(EditAnywhere, Category = "Portfolio")
-	TArray<FTileData> Point;
 };

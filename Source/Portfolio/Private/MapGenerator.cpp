@@ -4,6 +4,10 @@
 #include "MapGenerator.h"
 #include "Math/RandomStream.h"
 #include "TileBase.h"
+#include "StartTile.h"
+#include "EndTile.h"
+#include "InteractableSignalActorBase.h"
+#include "DoorBase.h"
 
 // Sets default values
 AMapGenerator::AMapGenerator()
@@ -44,7 +48,7 @@ void AMapGenerator::GenerateMapArray() {
 	MapArrayInfo.Add(FMapArrayInfo(CurrentPos, CurrentType, CurrentDirection));
 	CurrentPos += Poses[0];
 
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		FNextInfo NextCandidate = GetNextCandidate(CurrentPos, CurrentDirection);
 
@@ -70,10 +74,18 @@ void AMapGenerator::GenerateMapArray() {
 
 		if (!NextCandidate.Types.IsEmpty()) {
 			NextTypeNum = NextCandidate.Types.Num();
+			int32 TypeNum = -1;
+			if (NextTypeNum > 1) {
+				TypeNum = FMath::RandRange(0, NextTypeNum - 1);
+			}
+			else {
+				TypeNum = 0;
+			}
+			CurrentType = NextCandidate.Types[TypeNum];
 		}
-
-		int32 TypeNum = FMath::RandRange(0, NextTypeNum - 1);
-		CurrentType = NextCandidate.Types[TypeNum];
+		else {
+			CurrentType = ETileType::Room;
+		}
 
 		MapArrayInfo.Add(FMapArrayInfo(CurrentPos, CurrentType, CurrentDirection));
 
@@ -189,7 +201,7 @@ FNextInfo AMapGenerator::GetNextCandidate(FVector2D Pos, ETileDirectionType Dire
 	FNextInfo Nexts;
 
 	TArray<ETileDirectionType> Directions = GetCandidate(Pos, Direction);
-	TArray<ETileType> Types = { ETileType::Room };
+	TArray<ETileType> Types;
 
 	int32 CandidateNum = 0;
 	int32 DirectionNum = 0;
@@ -222,6 +234,9 @@ FNextInfo AMapGenerator::GetNextCandidate(FVector2D Pos, ETileDirectionType Dire
 		if (Directions[0] == Direction) {
 			Types.Add(ETileType::Road);
 		}
+	}
+	else {
+		Types.Add(ETileType::Road);
 	}
 
 	Nexts.Directions = Directions;
@@ -270,6 +285,8 @@ TArray<ETileDirectionType> AMapGenerator::GetCandidate(FVector2D Pos, ETileDirec
 }
 
 void AMapGenerator::GenerateMap() {
+	AStartTile* Start = nullptr;
+	AEndTile* End = nullptr;
 	for (const FMapArrayInfo& Info : MapArrayInfo)
 	{
 		FVector CurrentPos = FVector(Info.Pos.Y * 2000, Info.Pos.X * 2000, 0.0);
@@ -319,7 +336,17 @@ void AMapGenerator::GenerateMap() {
 		ATileBase* GenerateTile = GetWorld()->SpawnActor<ATileBase>(Subclass);
 		GenerateTile->SetActorLocation(CurrentPos);
 		GenerateTile->AddActorWorldRotation(CurrentRotation);
+
+		if (Info.Type == ETileType::Start) {
+			Start = Cast<AStartTile>(GenerateTile);
+		}
+		else if (Info.Type == ETileType::End) {
+			End = Cast<AEndTile>(GenerateTile);
+		}
 	}
 
+	if (Start&&End) {
+		End->GetSignalActor()->AddGimmick(Start->GetDoor());
+	}
 
 }

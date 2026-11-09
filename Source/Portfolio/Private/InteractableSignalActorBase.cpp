@@ -34,3 +34,7 @@ void AInteractableSignalActorBase::Tick(float DeltaTime)
 bool AInteractableSignalActorBase::CanInteract() {
 	return State == SwitchState::Off;
 }
+
+void AInteractableSignalActorBase::AddGimmick(AActor* NewGimmick) {
+	Gimmicks.Add(NewGimmick);
+}

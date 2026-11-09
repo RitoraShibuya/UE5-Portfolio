@@ -15,7 +15,7 @@ enum class SwitchState : uint8
 };
 
 UCLASS()
-class PORTFOLIO_API AInteractableSignalActorBase : public AActor,public IInteractInterface
+class PORTFOLIO_API AInteractableSignalActorBase : public AActor, public IInteractInterface
 {
 	GENERATED_BODY()
 protected:
@@ -31,7 +31,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Portfolio")
 	SwitchState State = SwitchState::Off;
-public:	
+public:
 	// Sets default values for this actor's properties
 	AInteractableSignalActorBase();
 
@@ -39,9 +39,11 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	virtual bool CanInteract() override;
-public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+public:
+	virtual bool CanInteract() override;
+
+	void AddGimmick(AActor* NewGimmick);
 
 };
