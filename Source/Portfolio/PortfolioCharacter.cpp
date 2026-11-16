@@ -87,10 +87,12 @@ void APortfolioCharacter::Tick(float DeltaTime) {
 	case EPlayerState::None:
 		break;
 	case EPlayerState::Pickup:
+
 		PhysicsComponent->SetTargetLocationAndRotation(
 			End,
 			GetActorRotation()
 		);
+
 		break;
 	default:
 		break;
@@ -201,6 +203,7 @@ void APortfolioCharacter::DoInteract()
 			else {
 				Interact->OnInteract(this);
 			}
+			Interact->OnEndFocus();
 		}
 	}
 	break;

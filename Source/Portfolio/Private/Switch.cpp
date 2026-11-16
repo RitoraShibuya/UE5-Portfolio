@@ -48,17 +48,19 @@ void ASwitch::OnBoxBeginOverlap(
 	bool bFromSweep,
 	const FHitResult& SweepResult
 ) {
-	if (State == SwitchState::Off)
-	{
-		State = SwitchState::On;
-		MeshComponent->SetOverlayMaterial(DynamicInstance);
-		DynamicInstance->SetVectorParameterValue(
-			FName(ParamName),
-			OnColor
-		);
-		for (AActor* Gimmick : Gimmicks) {
-			if (ISignalInterface* Interface = Cast<ISignalInterface>(Gimmick)) {
-				Interface->OnSignal(OtherActor);
+	if (OtherActor->GetClass() == CheckObject) {
+		if (State == SwitchState::Off)
+		{
+			State = SwitchState::On;
+			MeshComponent->SetOverlayMaterial(DynamicInstance);
+			DynamicInstance->SetVectorParameterValue(
+				FName(ParamName),
+				OnColor
+			);
+			for (AActor* Gimmick : Gimmicks) {
+				if (ISignalInterface* Interface = Cast<ISignalInterface>(Gimmick)) {
+					Interface->OnSignal(OtherActor);
+				}
 			}
 		}
 	}

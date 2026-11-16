@@ -14,4 +14,6 @@ class PORTFOLIO_API AModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+private :
+	
 };

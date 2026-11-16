@@ -11,6 +11,7 @@
 #include "Widgets/Input/SVirtualJoystick.h"
 #include "MainWidget.h"
 #include "Kismet/GamePlayStatics.h"
+#include "UIManager.h"
 
 APortfolioPlayerController::APortfolioPlayerController()
 {
@@ -24,13 +25,11 @@ void APortfolioPlayerController::BeginPlay()
 
 	if (IsLocalPlayerController()) {
 
-		//MainUI生成
-		MainUI = CreateWidget<UMainWidget>(this, MainUIWidgetClass);
-
-		if (MainUI)
-		{
-			MainUI->AddToPlayerScreen(0);
+		AUIManager* HUD = Cast<AUIManager>(GetHUD());
+		if (HUD) {
+			HUD->CreateMainWidget();
 		}
+
 
 		// only spawn touch controls on local player controllers
 		if (ShouldUseTouchControls())
@@ -99,7 +98,7 @@ void APortfolioPlayerController::OnStartFocus(AActor* CameraActor,float BlendTim
 
 void APortfolioPlayerController::OnEndFocus(AActor* CameraActor, float BlendTime) {
 	SetViewTargetWithBlend(
-		this,
+		this->GetPawn(),
 		BlendTime,
 		EViewTargetBlendFunction::VTBlend_Linear,
 		0.0f,

@@ -22,12 +22,14 @@ class PORTFOLIO_API ASwitch : public AInteractableSignalActorBase
 
 private:
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UBoxComponent> OverlapBox;
 
-	UPROPERTY()
-	TObjectPtr<UMaterialInstanceDynamic> DynamicInstance;
 
+	UPROPERTY(EditAnywhere, Category = "Portfolio")
+	TSubclassOf<AActor> CheckObject;
+
+	UMaterialInstanceDynamic* DynamicInstance;
 protected:
 	UPROPERTY(EditAnywhere, Category = "Portfolio")
 	UMaterialInterface* OverlayMaterial;

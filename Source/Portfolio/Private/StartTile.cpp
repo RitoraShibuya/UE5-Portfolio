@@ -4,7 +4,6 @@
 #include "StartTile.h"
 #include "Components/ChildActorComponent.h"
 #include "DoorBase.h"
-#include "Components/RectLightComponent.h"
 
 AStartTile::AStartTile() {
 	DoorActorComponent = CreateDefaultSubobject<UChildActorComponent>(TEXT("ChildActor"));
@@ -18,15 +17,10 @@ AStartTile::AStartTile() {
 
 	ClearAreaActorComponent = CreateDefaultSubobject<UChildActorComponent>(TEXT("ClearAreaActor"));
 	ClearAreaActorComponent->SetupAttachment(Root);
-
-	BackLightComponent = CreateDefaultSubobject<URectLightComponent>(TEXT("BackLight"));
-	BackLightComponent->SetupAttachment(Root);
-
-
 }
 
 void AStartTile::BeginPlay() {
-
+	Super::BeginPlay();
 }
 
 ADoorBase* AStartTile::GetDoor() {

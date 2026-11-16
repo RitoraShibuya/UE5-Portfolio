@@ -8,7 +8,6 @@
 
 class UChildActorComponent;
 class ADoorBase;
-class URectLightComponent;
 /**
  * 
  */
@@ -29,9 +28,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UChildActorComponent> ClearAreaActorComponent;
-
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<URectLightComponent> BackLightComponent;
 protected:
 	AStartTile();
 

@@ -13,5 +13,8 @@ UCLASS()
 class PORTFOLIO_API AInGameMode : public AModeBase
 {
 	GENERATED_BODY()
+
+public:
+	void OnGameClear();
 	
 };

@@ -9,16 +9,19 @@
 #include "PickupActor.generated.h"
 
 class UStaticMeshComponent;
+class UWidgetComponent;
 
 UCLASS()
 class PORTFOLIO_API APickupActor : public AActor,public IInteractInterface, public IPickupInterface
 {
 	GENERATED_BODY()
-protected:
-	UPROPERTY(EditDefaultsOnly, Category = "Portfolio")
+private:
+	UPROPERTY(VisibleAnywhere, Category = "Portfolio")
 	TObjectPtr<UStaticMeshComponent> MeshComponent;
 
-private:
+	UPROPERTY(VisibleAnywhere, Category = "Portfolio")
+	TObjectPtr<UWidgetComponent> WidgetComponent;
+
 	TObjectPtr<USceneComponent> Root;
 
 public:	
@@ -34,4 +37,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual UStaticMeshComponent* GetMeshComponent() override;
+
+	virtual void OnBeginFocus() override;
+
+	virtual void OnEndFocus() override;
 };
